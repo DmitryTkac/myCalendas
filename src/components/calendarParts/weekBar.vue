@@ -1,26 +1,30 @@
 <template>
         <thead id="weekBar">
             <tr>
-
+                
                 <calendarBlock type="weekMonth"/>
 
-                <calendarBlock type="week" v-bind:key="i" v-for="i in weekDays" v-bind:value='i'/>
-
-                <calendarBlock type="weekSpace"/>
-
-                <calendarBlock type="week" v-bind:key="i" v-for="i in weekDays" v-bind:value='i'/>
+                <calendarBlock type="week" v-bind:key="i.id" v-for="i in weekDays" v-bind:value='i'/>
+                <calendarBlock type="weekS" value='S'/>
                 
-                <calendarBlock type="weekSpace"/>
 
-                <calendarBlock type="week" v-bind:key="i" v-for="i in weekDays" v-bind:value='i'/>
+                <calendarBlock type="week" v-bind:key="i.id" v-for="i in weekDays" v-bind:value='i'/>
+                <calendarBlock type="week" value='S'/>
                 
-                <calendarBlock type="weekSpace"/>
+                
 
-                <calendarBlock type="week" v-bind:key="i" v-for="i in weekDays" v-bind:value='i'/>
+                <calendarBlock type="week" v-bind:key="i.id" v-for="i in weekDays" v-bind:value='i'/>
+                <calendarBlock type="week" value='S'/>
+                
 
-                <calendarBlock type="weekSpace"/>
+                <calendarBlock type="week" v-bind:key="i.id" v-for="i in weekDays" v-bind:value='i'/>
+                <calendarBlock type="week" value='S'/>
 
-                <calendarBlock type="week" v-bind:key="i" v-for="i in weekDays" v-bind:value='i'/>
+
+                <calendarBlock type="week" v-bind:key="i.id" v-for="i in weekDays" v-bind:value='i'/>
+                <calendarBlock type="week" value='S'/>
+
+                <calendarBlock type="week" v-bind:key="i.id" v-for="i in 2" v-bind:value='weekDays[i-1]'/>
 
             </tr>
         </thead>
@@ -42,7 +46,7 @@ export default {
     data() {
         return {
             //weekDays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-            weekDays: ["M", "T", "W", "T", "F", "S", "S"]
+            weekDays: ["M", "T", "W", "T", "F", "S"]
         }
     }
 }
@@ -55,17 +59,6 @@ export default {
         color: white;
 
     }
-
-    #weekPad {
-        padding: 5px;
-    }
-
-    #weekMonPad {
-
-
-        padding: 20px;
-    }
-
 </style>
 
 

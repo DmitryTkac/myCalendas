@@ -1,5 +1,8 @@
 <template>
-    <td v-if="type == 'day'" class="day">
+    <td v-if="type == 'day' && date.getDay()==0" id="sunday" class="day">
+        {{ value }}
+    </td>
+    <td v-else-if="type == 'day'" class="day">
         {{ value }}
     </td>
     <td v-else-if="type == 'void'" class="void">
@@ -12,6 +15,9 @@
         {{ value }}
     </td>
     <th v-else-if="type == 'week'" class="week">
+        {{ value }}
+    </th>
+    <th v-else-if="type == 'weekS'" class="weekS">
         {{ value }}
     </th>
     <th v-else-if="type == 'weekSpace'" class="weekSpace">
@@ -28,7 +34,8 @@ export default {
 
     props: {
         type: String, //Month, weekMonth, week, weekSpace, space, day, void
-        value: [String, Number]
+        value: [String, Number],
+        date: Object
     }
 
 }
@@ -36,13 +43,31 @@ export default {
 
 <style>
     .void {
-        background: repeating-linear-gradient(45deg, transparent, transparent 2px,#80808078 2.5px,#80808078 5px    )
+
+    }
+
+    #sunday {
+        border: solid;
+        border-right-width: 13px;
+        border-top: hidden;
+        border-bottom: hidden;
+        border-left: hidden;
+        border-right-color: lightgrey;
+        background: rgb(252, 113, 113);
+    }
+
+    #sunday:hover{
+        background: rgb(255, 157, 157);
     }
 
     .day {
-        background: lightslategray;
-        padding: 13px;
+        background: rgb(156, 172, 189);
+        padding: 12px;
         color: white;
+    }
+
+    .day:hover{
+        background: rgb(202, 202, 202);
     }
 
     .week {
@@ -52,9 +77,17 @@ export default {
         color: white;
     }
 
-    .month {
-        font-size: 16pt;
+    .weekS {
+        background: #5a5a5a;
         padding: 13px;
+        font-size: 13pt;
+        color: white;
+    }
+
+    .month {
+        font-size: 15pt;
+        padding: 13px;
+        background: white;
     }
 
     .weekSpace {

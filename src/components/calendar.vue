@@ -1,10 +1,10 @@
 <template>
     <div class="calendarFrame">
         <h1>THIS IS CALENDAS</h1>
-        <h2>TODAY: {{today.getFullYear()}}</h2>
+        <h2> <span v-on:click='prevYear()' class="button">«</span>  {{ customYear }} <span v-on:click='nextYear()' class="button">»</span> </h2>
         <table>
             <weekBar></weekBar>
-            <allMonth v-bind:year='today.getFullYear()'/>
+            <allMonth v-bind:year='customYear'/>
         </table>
     </div>
 </template>
@@ -21,7 +21,10 @@ export default {
 
     data() {
         return {
-            today: this.getToday()
+            today: this.getToday(),
+            customYear: this.getToday().getFullYear(),
+            eventStart: null,
+            eventEnd: null
         }        
     },
 
@@ -34,6 +37,14 @@ export default {
     methods: {
         getToday: function() {
             return new Date();
+        },
+
+        nextYear: function() {
+            this.customYear++;
+        },
+
+        prevYear: function() {
+            this.customYear--;
         }
     }
 
@@ -43,10 +54,14 @@ export default {
 </script>
 
 <style >
+    .button {
+        cursor: pointer;
+    }
+
     .calendarFrame {
         border-radius: 5px;
         border: 1px solid black;
-
+        user-select: none;    
         position: relative;
         display: inline-block;
         margin: auto;
@@ -56,7 +71,8 @@ export default {
 
     table {
         border-collapse: collapse; 
-        user-select: none;      
+         
+        background: repeating-linear-gradient(45deg, transparent, transparent 2px,#80808078 2.5px,#80808078 5px    ) 
     }
 
     #jan {

@@ -1,29 +1,35 @@
 <template>
-    <tr>
-        <calendarBlock type="month" v-bind:value="monthList[month-1]"/>
+    <tr>    
         
-        <calendarBlock type="void" v-bind:key="i" v-for="i in 7" v-bind:value='i'/>
-        <calendarBlock type="space"/>
-        <calendarBlock type="day" v-bind:key="i" v-for="i in 7" v-bind:value='i'/>
-        <calendarBlock type="space"/>
-        <calendarBlock type="void" v-bind:key="i" v-for="i in 7" v-bind:value='i'/>
-        <calendarBlock type="space"/>
-        <calendarBlock type="day" v-bind:key="i" v-for="i in 7" v-bind:value='i'/>
-        <calendarBlock type="space"/>
-        <calendarBlock type="day" v-bind:key="i" v-for="i in 7" v-bind:value='i'/>
+        <calendarBlock type="month" v-bind:value="monthList[month-1]"/>
+        <calendarBlock type="space" v-bind:key="i.id" v-for="i in spacing"/>
+        <calendarBlock type="day" 
+            v-bind:key="i.id" 
+            v-for="i in (new Date(year, month, 0).getDate())" 
+            v-bind:value='i' 
+            v-bind:date='new Date(year, month-1, i)'/>
+        <calendarBlock type="space" v-bind:key="i.id" v-for="i in 37-spacing-(new Date(year, month, 0).getDate())"/>
     </tr>    
 </template>
 
 <script>
+//REMEMBER: new Date()
+
 import calendarBlock from './calendarBlock.vue';
 
 export default {
     name: "month",
     props: {
-        month: String
+        month: Number,
+        year: Number,
+        spacing: Number //IF SPACING == 6 THEN IT IS SUNDAY MY BRUDA
     },
     components: {
         calendarBlock
+    },
+
+    methods: {
+
     },
 
     data() {
@@ -35,7 +41,7 @@ export default {
                 "SEP", "OCT", "NOV",
                 "DEC"
             ],
-            jan: "TEST JAN"
+            
         }
     }
     
@@ -45,5 +51,3 @@ export default {
 <style>
 
 </style>
-
-
