@@ -7,13 +7,16 @@
             v-bind:key="i.id" 
             v-for="i in (new Date(year, month, 0).getDate())" 
             v-bind:value='i' 
-            v-bind:date='new Date(year, month-1, i)'/>
+            v-bind:date='new Date(year, month-1, i)'
+            v-bind:isEvented='evented($parent.$parent.event.start.normalDate, $parent.$parent.event.end.normalDate, new Date(year, month-1, i))'
+        />
         <calendarBlock type="space" v-bind:key="i.id" v-for="i in 37-spacing-(new Date(year, month, 0).getDate())"/>
     </tr>    
 </template>
 
 <script>
-//REMEMBER: new Date()
+//REMEMBER: new Date(2019, 12, 0) == new Date(2019, 11, 31)
+//                             ^^ = month MAX day count
 
 import calendarBlock from './calendarBlock.vue';
 
@@ -29,7 +32,17 @@ export default {
     },
 
     methods: {
-
+        evented: function(rangeStart, rangeEnd, date) {
+            if (rangeStart > rangeEnd) {
+                let buff = rangeStart;
+                rangeStart = rangeEnd;
+                rangeEnd = buff;
+            }
+            if (rangeStart <= date && date <= rangeEnd) {
+                return true;
+            } 
+            return false;
+        }
     },
 
     data() {

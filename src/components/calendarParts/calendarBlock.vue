@@ -1,8 +1,8 @@
 <template>
-    <td v-if="type == 'day' && date.getDay()==0" id="sunday" class="day">
+    <td v-if="type == 'day' && date.getDay()==0" id="sunday" v-bind:class="{evented: isEvented}" class="day"  v-on:click='getYouChoose()'>
         {{ value }}
     </td>
-    <td v-else-if="type == 'day'" class="day">
+    <td v-else-if="type == 'day'" v-bind:id="checkEvented()" class="day" v-on:click='getYouChoose()'>
         {{ value }}
     </td>
     <td v-else-if="type == 'void'" class="void">
@@ -35,7 +35,24 @@ export default {
     props: {
         type: String, //Month, weekMonth, week, weekSpace, space, day, void
         value: [String, Number],
-        date: Object
+        date: Date,
+        isEvented: Boolean
+    },
+
+    methods: {
+        getYouChoose: function() {            
+            this.$parent.$parent.$parent.datums = this.date.getDate() + "-" + parseInt(this.date.getMonth()+1) + "-" + this.date.getFullYear();
+            this.$parent.$parent.$parent.registerEvent(this.date);
+            //this.$parent.$parent
+        },
+
+        checkEvented: function() {
+            if (this.isEvented) {
+                return "evented";
+            }
+            return "";
+        }
+  
     }
 
 }
@@ -45,7 +62,9 @@ export default {
     .void {
 
     }
-
+    #evented {
+        background: darkmagenta;
+    }
     #sunday {
         border: solid;
         border-right-width: 13px;
@@ -64,10 +83,11 @@ export default {
         background: rgb(156, 172, 189);
         padding: 12px;
         color: white;
+        cursor: pointer;
     }
 
     .day:hover{
-        background: rgb(202, 202, 202);
+        background: rgb(156, 190, 207);
     }
 
     .week {

@@ -1,12 +1,12 @@
 <template>
     <tbody>
-        
+        {{renderQ()}}
         <month 
-        v-bind:key="i.id" 
-        v-for="i in 12" 
-        v-bind:month='i' 
-        v-bind:year='year'
-        v-bind:spacing='configureSpacing(i)' 
+            v-bind:key="i.id" 
+            v-for="i in 12" 
+            v-bind:month='i' 
+            v-bind:year='year'
+            v-bind:spacing='configureSpacing(i)' 
         />
     </tbody>
 </template>
@@ -20,9 +20,7 @@ export default {
     },
 
     props: {
-        year: Number,
-
-        
+        year: Number,        
     },
 
     methods: {
@@ -32,8 +30,18 @@ export default {
                 return 6;
             }
             return spacing;
+        },
+        renderQ: function() {
+            if (this.eventStart > this.eventEnd) {
+                let buff = this.eventStart;
+                this.eventStart = this.eventEnd;
+                this.eventEnd = buff;
+            }
+            
+            //return this.eventStart + " " + this.eventEnd;            
         }
     },
+    
 
     date() {
         return {
