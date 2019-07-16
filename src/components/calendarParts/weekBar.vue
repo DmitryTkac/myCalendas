@@ -6,25 +6,20 @@
 
                 <calendarBlock type="week" v-bind:key="i.id" v-for="i in weekDays" v-bind:value='i'/>
                 <calendarBlock type="weekS" value='S'/>
-                
 
                 <calendarBlock type="week" v-bind:key="i.id" v-for="i in weekDays" v-bind:value='i'/>
-                <calendarBlock type="week" value='S'/>
-                
-                
+                <calendarBlock type="weekS" value='S'/>
 
                 <calendarBlock type="week" v-bind:key="i.id" v-for="i in weekDays" v-bind:value='i'/>
-                <calendarBlock type="week" value='S'/>
-                
+                <calendarBlock type="weekS" value='S'/>
 
                 <calendarBlock type="week" v-bind:key="i.id" v-for="i in weekDays" v-bind:value='i'/>
-                <calendarBlock type="week" value='S'/>
-
+                <calendarBlock type="weekS" value='S'/>
 
                 <calendarBlock type="week" v-bind:key="i.id" v-for="i in weekDays" v-bind:value='i'/>
-                <calendarBlock type="week" value='S'/>
+                <calendarBlock type="weekS" value='S'/>
 
-                <calendarBlock type="week" v-bind:key="i.id" v-for="i in 2" v-bind:value='weekDays[i-1]'/>
+                <calendarBlock type="weekS" v-bind:key="i.id" v-for="i in 2" v-bind:value='weekDays[i-1]'/>
 
             </tr>
         </thead>
@@ -39,7 +34,7 @@ export default {
     name: "weekBar",
 
     components: {
-        //weekBarTitles,
+        //weekBarTitles, | MB DELETE
         calendarBlock        
     },
 

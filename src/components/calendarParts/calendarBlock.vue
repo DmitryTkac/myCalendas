@@ -1,15 +1,9 @@
 <template>
-    <td v-if="type == 'day' && date.getDay()==0" id="sunday" v-bind:class="{evented: isEvented}" class="day"  v-on:click='getYouChoose()'>
+    <td v-if="type == 'day'" v-bind:class="checkDay()"  v-on:click='getYouChoose(eventType)'>
         {{ value }}
     </td>
-    <td v-else-if="type == 'day'" v-bind:id="checkEvented()" class="day" v-on:click='getYouChoose()'>
-        {{ value }}
-    </td>
-    <td v-else-if="type == 'void'" class="void">
+    <td v-else-if="type == 'void' || type == 'space'" class="void">
 
-    </td>
-    <td v-else-if="type == 'space'" class="void">
-        
     </td>
     <td v-else-if="type == 'month'" class="month">
         {{ value }}
@@ -17,7 +11,7 @@
     <th v-else-if="type == 'week'" class="week">
         {{ value }}
     </th>
-    <th v-else-if="type == 'weekS'" class="weekS">
+    <th v-else-if="type == 'weekS'" class="weekS"> 
         {{ value }}
     </th>
     <th v-else-if="type == 'weekSpace'" class="weekSpace">
@@ -36,21 +30,44 @@ export default {
         type: String, //Month, weekMonth, week, weekSpace, space, day, void
         value: [String, Number],
         date: Date,
-        isEvented: Boolean
+        eventType: String,
+        isApproved: Boolean
     },
 
     methods: {
-        getYouChoose: function() {            
-            this.$parent.$parent.$parent.datums = this.date.getDate() + "-" + parseInt(this.date.getMonth()+1) + "-" + this.date.getFullYear();
-            this.$parent.$parent.$parent.registerEvent(this.date);
+        getYouChoose: function(eventType) {
+            if (eventType == "day") {
+                this.$parent.$parent.$parent.chooseDate = this.$parent.$parent.$parent.processDate(this.date);
+                this.$parent.$parent.$parent.registerEvent(this.date);    
+            }
+            
+            
             //this.$parent.$parent
         },
 
         checkEvented: function() {
-            if (this.isEvented) {
-                return "evented";
+            let type = this.eventType;
+            if (this.isApproved) {                
+                type += "_approved"
             }
-            return "";
+
+            if (type != "day") {
+                type += " hover"
+            }
+
+            return type;
+        },
+
+        checkDay: function() {
+            let classes = this.checkEvented();
+            if (this.date.getDay() == 0) {
+                classes += " sunday";
+            } else if (this.date.getDay() == 6) {
+                classes += " holiday";
+            } 
+
+            
+            return classes;
         }
   
     }
@@ -59,55 +76,96 @@ export default {
 </script>
 
 <style>
+
+    
     .void {
 
     }
-    #evented {
-        background: darkmagenta;
+    /*  EVENTS NAMES
+    vacantion - atvaļinājums -, sick_leave - slimība, business trip - komandējums */
+    .hover:hover {
+        filter: grayscale(50%)
     }
-    #sunday {
+
+    .vacantion {
+        background: rgb(255, 255, 176);        
+    }
+    
+    
+
+    .vacantion_approved {
+        background: rgb(255, 255, 89);
+    }
+
+    .sickLeave {
+        background: lightgreen;
+        font-size: 9pt;
+    }
+
+
+    .sickLeave_approved {
+        background: rgb(75, 209, 75);
+    }
+    
+    .bussnessTrip {
+        background: rgb(138, 170, 204);
+        
+    }
+
+    .bussnessTrip_approved {
+        background: rgb(87, 127, 170);
+    }
+
+    .holiday {
+        font-weight: bold;
+        font-size: 10pt;
+    }
+    .sunday {
         border: solid;
-        border-right-width: 13px;
+        border-right-width: 9px;
         border-top: hidden;
         border-bottom: hidden;
         border-left: hidden;
         border-right-color: lightgrey;
-        background: rgb(252, 113, 113);
-    }
-
-    #sunday:hover{
-        background: rgb(255, 157, 157);
+        /* background: rgb(252, 113, 113); */        
+        min-width: 12px;
+        font-weight: bold;
+        font-size: 10pt;
     }
 
     .day {
-        background: rgb(156, 172, 189);
-        padding: 12px;
-        color: white;
+        background: rgb(255, 255, 255);
+        padding: 9px;
+        color: rgb(78, 73, 73);
         cursor: pointer;
+        min-width: 12px;
+        font-size: 9pt;
     }
 
     .day:hover{
-        background: rgb(156, 190, 207);
+        background: rgb(203, 205, 206);
     }
 
     .week {
         background: #5a5a5a;
-        padding: 13px;
-        font-size: 13pt;
+        padding: 9px;
+        font-size: 9pt;
         color: white;
+        width: 9px;
     }
 
-    .weekS {
+    .weekS { /*Week part: SUNDAY*/
         background: #5a5a5a;
-        padding: 13px;
-        font-size: 13pt;
+        padding: 11px;
+        font-size: 11pt;
         color: white;
     }
 
     .month {
-        font-size: 15pt;
-        padding: 13px;
+        font-size: 9pt;
+        padding: 11px;
         background: white;
+        font-weight: bold;
     }
 
     .weekSpace {
@@ -115,7 +173,7 @@ export default {
     }
 
     .weekMonth {
-        padding: 20px;
+        padding: 16px;
     }
 </style>
 

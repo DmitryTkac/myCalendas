@@ -13,7 +13,9 @@ export default {
   name: 'app',
   components: {
     calendar
-  }
+  },
+
+  
 }
 </script>
 
