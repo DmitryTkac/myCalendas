@@ -8,7 +8,7 @@
             v-for="i in (new Date(year, month, 0).getDate())" 
             v-bind:value='i' 
             v-bind:date='new Date(year, month-1, i)'
-            
+            v-bind:eventRegisterHelper="evented($parent.$parent.marking.start.normalDate, $parent.$parent.marking.end.normalDate, new Date(year, month-1, i))"
             v-bind:eventType="loadEvents($parent.$parent.events, new Date(year, month-1, i))[0]"
             v-bind:isApproved="loadEvents($parent.$parent.events, new Date(year, month-1, i))[1]"
         />
@@ -34,12 +34,7 @@ export default {
     },
 
     methods: {
-        evented: function(rangeStart, rangeEnd, date) {
-            if (rangeStart > rangeEnd) {
-                let buff = rangeStart;
-                rangeStart = rangeEnd;
-                rangeEnd = buff;
-            }
+        evented: function(rangeStart, rangeEnd, date) {            
             if (rangeStart <= date && date <= rangeEnd) {
                 return true;
             } 

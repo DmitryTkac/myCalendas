@@ -31,9 +31,11 @@ export default {
         value: [String, Number],
         date: Date,
         eventType: String,
-        isApproved: Boolean
+        isApproved: Boolean,
+        eventRegisterHelper: Boolean
     },
 
+    
     methods: {
         getYouChoose: function(eventType) {
             if (eventType == "day") {
@@ -48,13 +50,21 @@ export default {
         checkEvented: function() {
             let type = this.eventType;
             if (this.isApproved) {                
-                type += "_approved"
+                type += "_approved";
             }
 
             if (type != "day") {
-                type += " hover"
+                type += " hover";
             }
-
+            if (type == "day" && this.eventRegisterHelper) {
+                type = "helperMarker hover";
+            }
+            
+            if (this.date.getDate() == new Date().getDate() 
+                && this.date.getMonth() == new Date().getMonth() 
+                && this.date.getFullYear() == new Date().getFullYear()) {
+                type += " today";
+            }
             return type;
         },
 
@@ -81,6 +91,22 @@ export default {
     .void {
 
     }
+
+    .today {
+        animation-name: today;
+        animation-duration: 2s;
+    }
+
+    @keyframes today {        
+        50% {background: orange; color: white}        
+    }
+
+    .helperMarker {
+        background: lightcoral;
+
+        min-width: 12px;
+        padding: 9px;
+    }
     /*  EVENTS NAMES
     vacantion - atvaļinājums -, sick_leave - slimība, business trip - komandējums */
     .hover:hover {
@@ -88,37 +114,62 @@ export default {
     }
 
     .vacantion {
-        background: rgb(255, 255, 176);        
+        background: rgb(255, 255, 176);  
+
+        min-width: 12px;
+        font-size: 9pt;
+        padding: 9px;      
     }
     
     
 
     .vacantion_approved {
         background: rgb(255, 255, 89);
+
+        min-width: 12px;
+        font-size: 9pt;
+        padding: 9px;
     }
 
     .sickLeave {
         background: lightgreen;
+        
+        min-width: 12px;
         font-size: 9pt;
+        padding: 9px;
     }
 
 
     .sickLeave_approved {
         background: rgb(75, 209, 75);
+
+        min-width: 12px;
+        font-size: 9pt;
+        padding: 9px;
     }
     
-    .bussnessTrip {
+    .businessTrip {
         background: rgb(138, 170, 204);
         
+        min-width: 12px;
+        font-size: 9pt;
+        padding: 9px;
     }
 
-    .bussnessTrip_approved {
+    .businessTrip_approved {
         background: rgb(87, 127, 170);
+
+        min-width: 12px;
+        font-size: 9pt;
+        padding: 9px;
     }
 
     .holiday {
         font-weight: bold;
+        
+        min-width: 12px;
         font-size: 10pt;
+        padding: 9px;
     }
     .sunday {
         border: solid;
@@ -128,18 +179,23 @@ export default {
         border-left: hidden;
         border-right-color: lightgrey;
         /* background: rgb(252, 113, 113); */        
-        min-width: 12px;
+        
         font-weight: bold;
+        
+        min-width: 12px;
         font-size: 10pt;
+        padding: 9px;
     }
 
     .day {
         background: rgb(255, 255, 255);
-        padding: 9px;
+        
         color: rgb(78, 73, 73);
         cursor: pointer;
+        
         min-width: 12px;
         font-size: 9pt;
+        padding: 9px;
     }
 
     .day:hover{
@@ -151,7 +207,7 @@ export default {
         padding: 9px;
         font-size: 9pt;
         color: white;
-        width: 9px;
+        width: 12px;
     }
 
     .weekS { /*Week part: SUNDAY*/
