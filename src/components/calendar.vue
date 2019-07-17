@@ -3,7 +3,7 @@
 
         <v-dialog/>
 
-        <modal name="eventBox" :height="500">
+        <modal name="eventBox" :height="500" :width="700">
             <eventBox 
                 v-bind:start_date="marking.start.normalDate"
                 v-bind:end_date="marking.end.normalDate"
@@ -31,9 +31,15 @@
         <button @click="todayButton()"><h2>TODAY</h2></button>
         <button @click="show()"><h2>REGISTER EVENT</h2></button>
         
+        <hr>
         
+        <colorTable eColor="rgb(255, 255, 176)" colorName="Vacantion"/>
+        <colorTable eColor="rgb(255, 255, 89)" colorName="Vacantion Approved"/>
+        <colorTable eColor="lightgreen" colorName="Sick Leave"/>
+        <colorTable eColor="rgb(75, 209, 75)" colorName="Sick Leave Approved"/>
+        <colorTable eColor="rgb(138, 170, 204)" colorName="Business Trip"/>
+        <colorTable eColor="rgb(87, 127, 170)" colorName="Business Trip Approved"/>
         
-
         
     </div>
 </template>
@@ -48,7 +54,7 @@ Vue.use(VModal,{ dialog: true }, { dynamic: true, dynamicDefaults: { clickToClos
 import allMonth from './calendarParts/allMonth.vue';
 import weekBar from './calendarParts/weekBar.vue';
 import eventBox from './calendarControlParts/eventBox.vue';
-
+import colorTable from './calendarParts/colorTable.vue';
 
 //import calendarBlock from './calendarParts/calendarBlock.vue';
 
@@ -58,7 +64,7 @@ export default {
     data() {
         return {
             today: this.getToday(),
-            customYear: this.getToday().getFullYear(),
+            customYear: this.getToday().getFullYear(), //-271821 - 275760
 
             marking: {
                 start: {
@@ -75,36 +81,42 @@ export default {
             range: 0,
             chooseDate: 0,
 
-            events: [
+            events: [                
                 {
                     type: "vacantion",
                     start_date: new Date(2019, 7, 15),
                     end_date: new Date(2019, 7, 25),
-                    approved: true
+                    statusColor: "rgb(255, 255, 176)"
                 },
                 {
                     type: "vacantion",
                     start_date: new Date(2019, 9 ,15),
                     end_date: new Date(2019, 9, 25),
-                    approved: false
+                    statusColor: "rgb(255, 255, 89)"
                 },
                 {
                     type: "sickLeave",
                     start_date: new Date(2018, 11, 1),
                     end_date: new Date(2019, 1, 10),
-                    approved: false
+                    statusColor: "lightgreen"
+                },
+                {
+                    type: "sickLeave",
+                    start_date: new Date(2019, 2, 12),
+                    end_date: new Date(2019, 2, 14),
+                    statusColor: "rgb(75, 209, 75)"
                 },
                 {
                     type: "businessTrip",
                     start_date: new Date(2019, 3, 3),
                     end_date: new Date(2019, 4, 1),
-                    approved: true
+                    statusColor: "rgb(138, 170, 204)"                    
                 },
                 {
                     type: "businessTrip",
                     start_date: new Date(2019, 4, 14),
                     end_date: new Date(2019, 4, 15),
-                    approved: false                    
+                    statusColor: "rgb(87, 127, 170)"
                 },
             ]
 
@@ -115,7 +127,7 @@ export default {
         weekBar,
         allMonth,
         eventBox,
-        
+        colorTable
         //calendarBlock
     },
 
@@ -123,18 +135,18 @@ export default {
 
         show () {
 
-             if (this.marking.start.normalDate == null) {
-                this.$modal.show('dialog', {            
-                title: 'Event register ERROR',
-                text: 'Please select some date or date range to make event!',
-                buttons: [                
-                    {
-                        title: 'Cancel'
-                    }
-                ]
-                })
-                return;
-            }
+            //  if (this.marking.start.normalDate == null) {
+            //     this.$modal.show('dialog', {            
+            //     title: 'Event register ERROR',
+            //     text: 'Please select some date or date range to make event!',
+            //     buttons: [                
+            //         {
+            //             title: 'Cancel'
+            //         }
+            //     ]
+            //     })
+            //     return;
+            // }
 
             let i = 0;
             for (i in this.events) {
@@ -144,6 +156,7 @@ export default {
                     text: 'Your marked event are in existing event!',
                     buttons: [                
                         {
+                            default: true,
                             title: 'Cancel'
                         }
                     ]
@@ -159,6 +172,7 @@ export default {
             buttons: [
                 {
                     title: 'YES',
+                    default: true,
                     handler: () => { 
                         this.$modal.hide('dialog');
                         this.$modal.show('eventBox');                        
@@ -173,13 +187,42 @@ export default {
             //this.$modal.show('hello-world');
         },
 
-        addEvent: function(from, to, selection, description) {
+        addEvent: function(from, to, selection, description, color) {
             //console.log(from + " \n " + to  + " \n " +  selection  + " \n " +  description);
+            if (from > to) {
+                let buff = from
+                from = to;
+                to = buff;
+            }
+            let i = 0;
+            for (i in this.events) {
+                if (
+                    //(from <= this.events[i].start_date && this.events[i].end_date <= to)
+                    !((from < this.events[i].start_date && to < this.events[i].start_date)
+                    ||
+                    (from > this.events[i].end_date && to > this.events[i].start_date))
+                ) {
+                    this.$modal.show('dialog', {            
+                    title: 'Event register ERROR',
+                    text: 'Your marked event are in existing event!',
+                    buttons: [                
+                        {   
+                            default: true,
+                            title: 'Cancel'
+                        }
+                    ]
+                    })
+                    this.$modal.hide('eventBox');
+                    return;
+                }
+            }
+
             let eventPack = {
                 type: selection,
                 start_date: from,
                 end_date: to,
-                approved: false
+                approved: false,
+                statusColor: color
             }
             this.events.push(eventPack);
             this.closeEventBox();

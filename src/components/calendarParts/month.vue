@@ -1,6 +1,7 @@
 <template>
     <tr>    
         <!-- v-bind:isEvented='evented($parent.$parent.event.start.normalDate, $parent.$parent.event.end.normalDate, new Date(year, month-1, i))' -->
+        <!-- v-bind:isApproved="loadEvents($parent.$parent.events, new Date(year, month-1, i))[1]" -->
         <calendarBlock type="month" v-bind:value="monthList[month-1]"/>
         <calendarBlock type="space" v-bind:key="i.id" v-for="i in spacing"/>
         <calendarBlock type="day" 
@@ -10,7 +11,8 @@
             v-bind:date='new Date(year, month-1, i)'
             v-bind:eventRegisterHelper="evented($parent.$parent.marking.start.normalDate, $parent.$parent.marking.end.normalDate, new Date(year, month-1, i))"
             v-bind:eventType="loadEvents($parent.$parent.events, new Date(year, month-1, i))[0]"
-            v-bind:isApproved="loadEvents($parent.$parent.events, new Date(year, month-1, i))[1]"
+            
+            v-bind:eventColor="loadEvents($parent.$parent.events, new Date(year, month-1, i))[2]"
         />
         <calendarBlock type="space" v-bind:key="i.id" v-for="i in 37-spacing-(new Date(year, month, 0).getDate())"/>
     </tr>    
@@ -45,10 +47,10 @@ export default {
             let i = 0;
             for (i in eventObj) {
                 if (eventObj[i].start_date <= date && date <= eventObj[i].end_date) {
-                    return [eventObj[i].type, eventObj[i].approved];
+                    return [eventObj[i].type, eventObj[i].approved, eventObj[i].statusColor];
                 }                
-            }
-            return ["day", false];
+            }            
+            return ["day", false, "white"];
             
         }
     },

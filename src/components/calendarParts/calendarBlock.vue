@@ -1,5 +1,9 @@
 <template>
-    <td v-if="type == 'day'" v-bind:class="checkDay()"  v-on:click='getYouChoose(eventType)'>
+    <td v-if="type == 'day'" 
+        v-bind:class="checkDay()"  
+        v-on:click='getYouChoose(eventType)'
+        v-bind:style="{background: statusColor}"
+    >
         {{ value }}
     </td>
     <td v-else-if="type == 'void' || type == 'space'" class="void">
@@ -32,9 +36,15 @@ export default {
         date: Date,
         eventType: String,
         isApproved: Boolean,
-        eventRegisterHelper: Boolean
+        eventRegisterHelper: Boolean,
+        eventColor: String
     },
 
+    data() {
+        return {
+            statusColor: "white",
+        }
+    },
     
     methods: {
         getYouChoose: function(eventType) {
@@ -48,16 +58,18 @@ export default {
         },
 
         checkEvented: function() {
-            let type = this.eventType;
-            if (this.isApproved) {                
-                type += "_approved";
-            }
-
-            if (type != "day") {
-                type += " hover";
-            }
-            if (type == "day" && this.eventRegisterHelper) {
-                type = "helperMarker hover";
+            let type = "hover";            
+            
+            if (this.eventType == "day" && this.eventRegisterHelper) {
+                this.statusColor = "lightcoral";
+                
+            } else if (this.eventType == "day") {
+                this.statusColor = "";
+                
+                type += " day"
+            } else { 
+                   
+                this.statusColor = this.eventColor;                
             }
             
             if (this.date.getDate() == new Date().getDate() 
@@ -104,8 +116,7 @@ export default {
     .helperMarker {
         background: lightcoral;
 
-        min-width: 12px;
-        padding: 9px;
+        
     }
     /*  EVENTS NAMES
     vacantion - atvaļinājums -, sick_leave - slimība, business trip - komandējums */
@@ -168,8 +179,8 @@ export default {
         font-weight: bold;
         
         min-width: 12px;
-        font-size: 10pt;
-        padding: 9px;
+        font-size: 9pt;
+        
     }
     .sunday {
         border: solid;
@@ -183,8 +194,8 @@ export default {
         font-weight: bold;
         
         min-width: 12px;
-        font-size: 10pt;
-        padding: 9px;
+        font-size: 9pt;
+        
     }
 
     .day {
@@ -195,7 +206,7 @@ export default {
         
         min-width: 12px;
         font-size: 9pt;
-        padding: 9px;
+        
     }
 
     .day:hover{
@@ -204,16 +215,20 @@ export default {
 
     .week {
         background: #5a5a5a;
-        padding: 9px;
-        font-size: 9pt;
+        
         color: white;
-        width: 12px;
+        
+        min-width: 13px;
+        font-size: 9pt;
+        padding: 9px;
     }
 
     .weekS { /*Week part: SUNDAY*/
         background: #5a5a5a;
-        padding: 11px;
-        font-size: 11pt;
+        
+        min-width: 17px;
+        padding: 9px;
+        
         color: white;
     }
 

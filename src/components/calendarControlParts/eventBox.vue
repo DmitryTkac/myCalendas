@@ -1,15 +1,17 @@
 <template>
     <div id="cntrBox">
+        {{loadStandartData(start_date, end_date)}}\
         <div id="dateInfo">
-            <h2>
-                {{showFormated[0]}}
+            <h2 id="Datepicker">                   
+                FROM
+                <Datepicker ref="datepicker_1" v-model="from" @selected="selectStartDate"/>                
             </h2>
-            <h2>
-                {{showFormated[1]}}
+            <h2 id="Datepicker">
+                TO
+                <Datepicker ref="datepicker_2" v-model="to" @selected="selectEndDate"/>                
             </h2>
 
             <div>
-                {{loadStandartData()}}
                 <h3>DESCRIPTION</h3>
                 <textarea rows="10" cols="55" name="comment" form="usrform" v-model="eventDescr">
                     
@@ -28,7 +30,7 @@
                         Business Trip
                     </option>
                 </select>
-                <button @click="$parent.$parent.addEvent(start_date, end_date, selectedEvent, eventDescr)">CONFIRM</button>
+                <button @click="$parent.$parent.addEvent(new Date(from.getFullYear(), from.getMonth(), from.getDate()), to, selectedEvent, eventDescr, eventColor)">CONFIRM</button>
                 <button @click="$parent.$parent.closeEventBox()">CLOSE</button>
             </div>
             
@@ -38,9 +40,14 @@
 </template>
 
 <script>
+import Datepicker from 'vuejs-datepicker';
 export default {
 
     name: "eventBox",
+
+    components: {
+        Datepicker
+    },
 
     props: {
 //        id: Number,
@@ -51,19 +58,49 @@ export default {
     date() {
         return {
             selectedEvent: "vacantion",
-            eventDescr: ""
+            eventDescr: "",
+            eventColor: "rgb(255, 255, 176)",
+            from: Date,
+            to: Date
         }
     },
 
     methods: {
         changeEvent: function(event) {
             this.selectedEvent = event.target.value;
+            if (event.target.value == "vacantion") {
+                this.eventColor = "rgb(255, 255, 176)";
+            } else if (event.target.value == "sickLeave") {
+                this.eventColor = "lightgreen";
+            } else if (event.target.value == "businessTrip") {
+                this.eventColor = "rgb(138, 170, 204)";
+            }
+            
         },
 
-        loadStandartData: function() { //TO AVOID THE ERROR
+        loadStandartData: function(from, to) { //TO AVOID THE ERROR
             this.selectedEvent = "vacantion";
             this.eventDescr = "";
-        }
+            this.eventColor = "rgb(255, 255, 176)";
+            this.from = from;
+            this.to = to;
+        }, 
+
+        selectStartDate: function(date) {
+            
+            this.from = date;
+            if (this.to === null) {
+                this.to = this.from;
+                this.$refs.datepicker_2._data.selectedDate = this.$refs.datepicker_1._data.selectedDate;
+            }
+            
+        },
+
+        selectEndDate: function(date) {            
+            //console.log(date);
+            this.to = date;
+        },
+
     },
 
     computed: {
@@ -73,12 +110,19 @@ export default {
                 "TO \"" + this.end_date.getFullYear() + "-" + this.end_date.getMonth() + "-" + this.end_date.getDate() + "\""
             ];
         },
-    
+
+        
     }
 }
 </script>
 
 <style>
+    #Datepicker {        
+        margin-left: 10px;
+        margin-right: 10px;
+        display: inline-block;
+    }
+
     #cntrBox {
         margin: auto;        
     }
